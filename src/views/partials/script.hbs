@@ -1,0 +1,58 @@
+<script>
+    (function () {
+
+
+        try {
+
+            const $btnSave = document.getElementById('btnSave');
+            $btnSave.addEventListener('click', function () {
+                if (validateCamposNoVacios()) {
+                    console.log(createObjectUser());
+                    if (validatePassword()) {
+                        console.log('Sin errores');
+                        $.ajax({
+                            method: "POST",
+                            url: "/save/",
+                            data: createObjectUser(),
+                            dataType:'json'
+                        })
+                            .done(function (result) {
+                                console.log(result);
+                            });
+                    }
+                } else { }
+
+            });
+        } catch (err) { console.log(err); }
+
+        function validateCamposNoVacios() {
+            const $form = document.querySelector('form').querySelectorAll('input');
+            var c = 0;
+            for (var i = 0; i < $form.length; i++) {
+                if ($form[i].value !== "") { c++; }
+            }
+            return (c === $form.length) ? true : false;
+        }
+
+        function validatePassword() {
+            const $password = document.getElementsByName('password');
+            const $confirmPassword = document.getElementsByName('confirmPassword');
+            console.log($password.value, $confirmPassword.value);
+            return ($password.value === $confirmPassword.value) ? true : false;
+        }
+
+        function createObjectUser(){
+            const $form = document.getElementsByTagName('form')[0];
+            const $name = document.getElementsByName('name')[0];
+            const $usernmae = document.getElementsByName('usernmae')[0];
+            const $password = document.getElementsByName('password')[0];
+            const object ={
+                id:$form.dataset.id,
+                fullname:$name.value,
+                username:$usernmae.value,
+                password:$password.value
+            };
+            return object;
+        }
+    }());
+</script>
